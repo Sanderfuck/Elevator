@@ -19,8 +19,8 @@ public class Passenger {
     }
 
     private int generateDestinationFloorNumber() {
-        int middleOfHouse = Building.MAX_FLOOR_NUMBER_IN_BUILDING;
-        int destinationFloorNumber = (int) (Math.random() * (Building.MAX_FLOOR_NUMBER_IN_BUILDING));
+        int middleOfHouse = Building.MAX_FLOOR_NUMBER_IN_BUILDING / 2;
+        int destinationFloorNumber = (int) (Math.random() * Building.MAX_FLOOR_NUMBER_IN_BUILDING);
 
         if (destinationFloorNumber == currentFloorNumber) {
             destinationFloorNumber = extraRandom(middleOfHouse, destinationFloorNumber);
@@ -42,7 +42,7 @@ public class Passenger {
             return (int) (Math.random() * middle - 1) + 1;
         }
 
-        return (int) (Math.random() * Building.MAX_FLOOR_NUMBER_IN_BUILDING) + middle + 1;
+        return (int) (Math.random() * Building.MAX_FLOOR_NUMBER_IN_BUILDING - middle) + middle + 1;
     }
 
 }

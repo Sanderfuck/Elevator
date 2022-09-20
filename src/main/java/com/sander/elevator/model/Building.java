@@ -9,11 +9,13 @@ public class Building {
     private List<Floor> floors = new ArrayList<>();
     private Elevator elevator;
     public final static int MAX_FLOOR_NUMBER_IN_BUILDING = generateMaxFloorNumberInBuilding();
+    private int notTransportedPassengers;
 
     public Building() {
         generateFloors();
         print();
         elevator = new Elevator(this);
+        notTransportedPassengers = getQuantityPassengersInBuilding();
     }
 
     private static int generateMaxFloorNumberInBuilding() {
@@ -32,6 +34,28 @@ public class Building {
 
     public Elevator getElevator() {
         return elevator;
+    }
+
+    public boolean isNotTransportedPassengers() {
+        return getQuantityPassengersInBuilding() > 0;
+    }
+
+    private int getQuantityPassengersInBuilding() {
+        int sum = 0;
+
+        for (Floor floor : floors) {
+            sum += floor.getPassengers().size();
+        }
+
+        return sum;
+    }
+
+    public void setNotTransportedPassengers(int notTransportedPassengers) {
+        this.notTransportedPassengers = notTransportedPassengers;
+    }
+
+    public int getNotTransportedPassengers() {
+        return notTransportedPassengers;
     }
 
     public void print() {

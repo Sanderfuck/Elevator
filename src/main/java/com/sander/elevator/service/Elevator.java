@@ -16,7 +16,6 @@ public class Elevator {
     private final Building building;
     private int currentFloorNumber;
     private Floor currentFloor;
-    private int destinationFloorNumber = 2;
     private Direction direction;
     private List<Passenger> passengersInElevator = new ArrayList<>();
 
@@ -30,6 +29,8 @@ public class Elevator {
 
     public void move() {
         changePassengers();
+
+        checkDirection();
 
         if (direction == Direction.UP) {
             currentFloor = building.getFloor(++currentFloorNumber);
@@ -45,10 +46,6 @@ public class Elevator {
     private void changePassengers() {
         if (!passengersInElevator.isEmpty()) {
             removePassengersFromElevator();
-        }
-
-        if (destinationFloorNumber == currentFloorNumber) {
-            setNewDirection();
         }
 
         if (!currentFloor.getPassengers().isEmpty() && getVacancies() > 0) {
@@ -87,41 +84,25 @@ public class Elevator {
 
         passengersInElevator.removeAll(exitPassengersFromElevator);
 
+        building.setNotTransportedPassengers(building.getNotTransportedPassengers() - exitPassengersFromElevator.size());
+
         for (Passenger passenger : exitPassengersFromElevator) {
             System.out.println(passenger + " exit from elevator on " + currentFloor.getFloorNumber() + " floor");
         }
     }
 
-    private void checkDestinationFloor() {
-        for (Passenger passenger : passengersInElevator) {
-            if (destinationFloorNumber < passenger.getDestinationFloorNumber()) {
-                destinationFloorNumber = passenger.getDestinationFloorNumber();
-            }
+    private void checkDirection() {
+        if (currentFloorNumber == Building.MAX_FLOOR_NUMBER_IN_BUILDING) {
+            direction = Direction.DOWN;
         }
 
-        direction = checkDirection();
-    }
-
-    private Direction checkDirection() {
-        return currentFloorNumber < destinationFloorNumber ? Direction.UP : Direction.DOWN;
+        if (currentFloorNumber == 1) {
+            direction = Direction.UP;
+        }
     }
 
     private int getVacancies() {
         return ELEVATOR_MAX_CAPACITY - passengersInElevator.size();
-    }
-
-    private void setNewDirection() {
-        int up = 0;
-        int down = 0;
-        for (int i = 0; i < currentFloor.getPassengers().size(); i++) {
-            if (currentFloor.getPassengers().get(i).getDirection() == Direction.UP) {
-                up++;
-            } else {
-                down++;
-            }
-        }
-
-        direction = down >= up ? Direction.DOWN : Direction.UP;
     }
 
     public void print() {
